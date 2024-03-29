@@ -62,7 +62,6 @@ def print_results(
     highest_math_score_student,
     lowest_math_score_student,
     students_above_avg_english_score,
-    table,
 ):
     print("\nსტუდენტი ყველაზე მაღალი საშუალო ქულით:")
     print(
@@ -109,6 +108,5 @@ print_results(
     highest_average_score,
     highest_math_score_student,
     lowest_math_score_student,
-    above_avg_english_students,
-    table,
+    above_avg_english_students
 )
