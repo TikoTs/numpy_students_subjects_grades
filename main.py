@@ -1,8 +1,11 @@
 import numpy as np
 import random
-from data.data_students import georgian_first_names, georgian_last_names
 from tabulate import tabulate
-from data.data_subjects import subjects
+from Util.json_utils import read_data_from_json
+
+subjects = read_data_from_json("data/subjects.json", "subjects")
+georgian_first_names = read_data_from_json("data/students.json", "georgian_first_names")
+georgian_last_names = read_data_from_json("data/students.json", "georgian_last_names")
 
 num_students = 100
 num_subjects = len(subjects)
@@ -42,7 +45,14 @@ def student_with_extreme_math_scores(grades, table, subjects):
     lowest_math_score_index = np.argmin(math_scores)
     highest_math_score_student = table[highest_math_score_index][0]
     lowest_math_score_student = table[lowest_math_score_index][0]
-    return highest_math_score_student, lowest_math_score_student
+    highest_math_score_grade = math_scores[highest_math_score_index]
+    lowest_math_score_grade = math_scores[lowest_math_score_index]
+    return (
+        highest_math_score_student,
+        highest_math_score_grade,
+        lowest_math_score_student,
+        lowest_math_score_grade,
+    )
 
 
 def students_above_avg_english_score(grades, table, subjects):
@@ -60,7 +70,9 @@ def print_results(
     highest_average_student,
     highest_average_score,
     highest_math_score_student,
+    highest_math_score_grade,
     lowest_math_score_student,
+    lowest_math_score_grade,
     students_above_avg_english_score,
 ):
     print("\nსტუდენტი ყველაზე მაღალი საშუალო ქულით:")
@@ -76,10 +88,18 @@ def print_results(
     print(
         tabulate(
             [
-                ["ყველაზე მაღალი მათემატიკის ქულა", highest_math_score_student],
-                ["ყველაზე დაბალი მათემატიკის ქულა", lowest_math_score_student],
+                [
+                    "ყველაზე მაღალი მათემატიკის ქულა",
+                    highest_math_score_student,
+                    highest_math_score_grade,
+                ],
+                [
+                    "ყველაზე დაბალი მათემატიკის ქულა",
+                    lowest_math_score_student,
+                    lowest_math_score_grade,
+                ],
             ],
-            headers=["კატეგორია", "სტუდენტი"],
+            headers=["კატეგორია", "სტუდენტი", "ქულა"],
             tablefmt="pretty",
         )
     )
@@ -98,15 +118,22 @@ highest_average_student, highest_average_score = student_with_highest_avg_score(
     grades, table
 )
 
-highest_math_score_student, lowest_math_score_student = (
-    student_with_extreme_math_scores(grades, table, subjects)
-)
+
+(
+    highest_math_score_student,
+    highest_math_score_grade,
+    lowest_math_score_student,
+    lowest_math_score_grade,
+) = student_with_extreme_math_scores(grades, table, subjects)
+
 above_avg_english_students = students_above_avg_english_score(grades, table, subjects)
 
 print_results(
     highest_average_student,
     highest_average_score,
     highest_math_score_student,
+    highest_math_score_grade,
     lowest_math_score_student,
-    above_avg_english_students
+    lowest_math_score_grade,
+    above_avg_english_students,
 )
